@@ -1,10 +1,13 @@
-## Template Engine
+# Template Engine API
+
+This repository has a template API that allows to use multiple engine:
+
+* env var text engine
+* json template
+* pebble template
+* thymeleaf template
 
 
-Add more template engines than the core text template one.
+See the [tests](src/test/java/com/combostrap/template) for examples.
 
-
-## List
-Others
-
-  * https://github.com/google/closure-templates
+You need to add the engine in your `pom`. We don't provide it.

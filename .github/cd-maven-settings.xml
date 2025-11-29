@@ -1,0 +1,81 @@
+<!--Set the repositories -->
+<!--https://maven.apache.org/settings.html-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <interactiveMode>false</interactiveMode>
+
+  <profiles>
+    <profile>
+      <id>default-repos</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <repositories>
+        <!-- Google Mirror - Primary (faster) -->
+        <repository>
+          <id>google-maven-central</id>
+          <name>GCS Maven Central mirror EU</name>
+          <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+        <!-- Official Maven Central - Fallback -->
+        <repository>
+          <id>central</id>
+          <name>Maven Central Repository</name>
+          <url>https://repo.maven.apache.org/maven2</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+        <!-- Sonatype Snapshots -->
+        <repository>
+          <id>sonatype-snapshots</id>
+          <name>Sonatype Snapshots</name>
+          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <!-- Google Mirror - Primary (faster) -->
+        <pluginRepository>
+          <id>google-maven-central</id>
+          <name>GCS Maven Central mirror</name>
+          <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+        <!-- Official Maven Central - Fallback -->
+        <pluginRepository>
+          <id>central</id>
+          <name>Maven Central Repository</name>
+          <url>https://repo.maven.apache.org/maven2</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+
+</settings>

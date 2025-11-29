@@ -1,0 +1,77 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# Continuous delivery with JReleaser
+# Why not? maven, it creates a nice GitHub release
+
+name: Continuous Deployment to Maven Central Repository
+on:
+  # Trigger on button click
+  workflow_dispatch:
+  # Trigger on push on pom.xml changes
+  push:
+    paths:
+      - 'pom.xml'
+    branches:
+      - 'main'
+jobs:
+  publish:
+    # Slim is one CPU vs 4 for the standard ubuntu-latest
+    # Price is at the core by minutes
+    # We need to install java, and it's slower so it's maybe not a gain
+    runs-on: ubuntu-slim
+    steps:
+
+      - name: Git Checkout ${{ github.ref_name }}
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Import Gpg Signing Key
+        shell: bash
+        run:
+          gpg --batch --yes --passphrase "${{ secrets.GPG_SOFTWARE_SIGNING_PASSPHRASE }}" --import <(echo "${{ secrets.GPG_SOFTWARE_SIGNING_KEY }}")
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          # Should be defined by project but how
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Ref
+      # https://jreleaser.org/guide/latest/examples/maven/maven-central.html#_maven
+      - name: Publish package
+        run: |
+
+          set -TCEeuo pipefail
+
+          echo "Check config"
+          if ! CHECK_CONFIG=$(./mvnw --batch-mode -s .github/cd-maven-settings.xml --quiet jreleaser:config); then
+            echo "Error while checking the config"
+            echo "$CHECK_CONFIG"
+            exit 1
+          fi
+
+          echo "Stage Artifacts"
+          # The publication profile should be in the parent or the pom
+          # as seen here: https://jreleaser.org/guide/latest/examples/maven/maven-central.html#_maven
+          # and here: https://jreleaser.org/guide/latest/examples/maven/staging-artifacts.html
+          # It will attach the maven-javadoc-plugin and maven-source-plugin
+          ./mvnw --batch-mode -s .github/cd-maven-settings.xml --quiet -Ppublication
+
+          # Deploy snapshot or release
+          # https://jreleaser.org/guide/latest/tools/jreleaser-maven.html#_jreleaserdeploy
+          echo "Deploy snapshot or release"
+          ./mvnw --batch-mode -s .github/cd-maven-settings.xml jreleaser:deploy
+
+        env:
+          # https://central.sonatype.com/usertoken
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          # For snapshot, needed by JReleaser
+          JRELEASER_NEXUS2_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          JRELEASER_NEXUS2_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          # Gpg for signing
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.GPG_SOFTWARE_SIGNING_PASSPHRASE }}
+          # GitHub Token for release creation
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
