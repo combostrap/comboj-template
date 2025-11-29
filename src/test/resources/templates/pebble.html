@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Pebble</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+
+<p>{{ hello }}</p>
+
+<h1>Product list</h1>
+
+<table>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+  </tr>
+  {% for record in records %}
+  <tr>
+    <td>{{ record.get("NAME") }}</td>
+    <td>{{ record.get("PRICE") }}</td>
+    <td>{{ record.get("IN_STOCK") }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+</body>
+
+</html>

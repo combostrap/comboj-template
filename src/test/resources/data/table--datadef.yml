@@ -1,0 +1,12 @@
+headerRowId: 1
+quoteCharacter: '"'
+Columns:
+  - name: NAME
+    Comment: A name
+  - name: PRICE
+    Type: numeric
+    Precision: 10
+    Scale: 2
+    Comment: A price
+  - name: IN_STOCK
+    Type: boolean

@@ -1,0 +1,8 @@
+{
+  "Before${version}After": {
+    "${script}": {
+      "file": "${file}-myfile",
+      "integrity": "${integrity}"
+    }
+  }
+}

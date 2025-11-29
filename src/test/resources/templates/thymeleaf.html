@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Good Thymes Virtual Grocery</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+
+<p data-th-text="${welcome}">`welcome` value will come here</p>
+
+<h1>Product list</h1>
+
+<table>
+  <tr>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>IN STOCK</th>
+  </tr>
+  <tr th:each="record: ${records}">
+    <td th:text="${record.get('NAME')}">Onions</td>
+    <td th:text="${record.get('PRICE')}">2.41</td>
+    <td th:text="${record.get('IN_STOCK')}? yes : no">yes</td>
+  </tr>
+</table>
+
+</body>
+
+</html>
